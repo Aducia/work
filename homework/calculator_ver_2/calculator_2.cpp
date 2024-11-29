@@ -4,6 +4,7 @@
 int main () {
 	char a[255];
 	int num[255];
+	char operands[255];
 	std::cin >> a;
 	int length = strlen(a);
 	for (int i = 0; i < length; i++) {
