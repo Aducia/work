@@ -1,0 +1,59 @@
+#include <iostream>
+using namespace std;
+
+int stringToInt(const char* str) {
+  int num = 0;
+  for (int i = 0; str[i] != '\0'; i++) {
+    num = num * 10 + (str[i] - '0');
+  }
+  return num;
+}
+
+int calculate(int a, int b, char op) {
+  if (op == '+') return a + b;
+  if (op == '-') return a - b;
+  if (op == '*') return a * b;
+  if (op == '/') return a / b;
+  return 0;
+}
+
+int main() {
+  char input[100];
+
+  while (true) {
+    cin >> input;
+
+    int result = 0;
+    char currentOp = '+';
+    char currentNumber[10];
+    int numIndex = 0;
+
+    for (int i = 0; input[i] != '\0'; i++) {
+      char ch = input[i];
+
+      if (ch >= '0' && ch <= '9') {
+        currentNumber[numIndex++] = ch;
+      } else {
+
+        if (numIndex > 0) {
+          currentNumber[numIndex] = '\0';
+          int num = stringToInt(currentNumber);
+          result = calculate(result, num, currentOp);
+          numIndex = 0;
+        }
+
+        currentOp = ch;
+      }
+    }
+
+    if (numIndex > 0) {
+      currentNumber[numIndex] = '\0';
+      int num = stringToInt(currentNumber);
+      result = calculate(result, num, currentOp);
+    }
+
+    cout << result << endl;
+  }
+
+  return 0;
+}
