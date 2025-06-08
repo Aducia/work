@@ -1,5 +1,6 @@
 import requests
 
+city = "Kyiv"
 api_key = "e3e0a0a855824b928f190351250806"
 base = "http://api.weatherapi.com/v1"
 
@@ -10,19 +11,21 @@ def fetch_weather(city):
     # Forecast endpoint (note: should be 'forecast.json', not 'current.json')
     fc_url = f"{base}/forecast.json?key={api_key}&q={city}&days=2"
     fc = requests.get(fc_url).json()
-
+    
     return curr, fc
+
+current, forecast = fetch_weather(city)
 
 def process_data(curr, fc):
     c = curr["current"]
     forecast_day = fc["forecast"]["forecastday"][0]["day"]
-    wind = c("wind_kph")
+    wind = c["wind_kph"]
     temp = c["temp_c"]
     min_temp = forecast_day["mintemp_c"]
     max_temp = forecast_day["maxtemp_c"]
     humidity = c["humidity"]
-    it_is_raining = forecast_day.get("daily_chance_of_rain", 0) > 0
-    feels_like = forecast_day.get("feelslike_c")
+    it_is_raining = forecast.get("daily_chance_of_rain", 0) > 0
+    feels_like = forecast_day.get("feelslike_c", c["temp_c"])
     uv = c["uv"]
 
     warnings, advice = [], []
@@ -50,10 +53,9 @@ def process_data(curr, fc):
         "advice": advice
     }
 
-# Example usage
-if __name__ == "__main__":
-    city = "Kyiv"
-    current, forecast = fetch_weather(city)
-    weather_info = process_data(current, forecast)
-    print(weather_info)
 
+weather = process_data(current, forecast)
+
+
+if __name__ == "__main__":
+    print(weather)
