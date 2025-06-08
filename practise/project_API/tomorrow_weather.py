@@ -14,14 +14,14 @@ def process_tomorrow_weather(fc):
     # Get forecast for tomorrow
     forecast_day = fc["forecast"]["forecastday"][1]["day"]
 
-    temp = forecast_day["avgtemp_c"]
-    min_temp = forecast_day["mintemp_c"]
-    max_temp = forecast_day["maxtemp_c"]
-    humidity = forecast_day["avghumidity"]
-    wind = forecast_day["maxwind_kph"]
-    it_is_raining = forecast_day.get("daily_chance_of_rain", 0) > 0
-    uv = forecast_day["uv"]
-    feels_like = temp  # Approximation, as there's no feels-like for forecast in API
+    temp_1 = forecast_day["avgtemp_c"]
+    min_temp_1 = forecast_day["mintemp_c"]
+    max_temp_1 = forecast_day["maxtemp_c"]
+    humidity_1 = forecast_day["avghumidity"]
+    wind_1 = forecast_day["maxwind_kph"]
+    it_is_raining_1 = forecast_day.get("daily_chance_of_rain", 0) > 0
+    uv_1 = forecast_day["uv"]
+    feels_like_1 = temp  # Approximation, as there's no feels-like for forecast in API
 
     warnings, advice = [], []
 

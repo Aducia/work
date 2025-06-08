@@ -6,56 +6,59 @@ base = "http://api.weatherapi.com/v1"
 
 def fetch_weather(city, days=5):
     fc_url = f"{base}/forecast.json?key={api_key}&q={city}&days={days}"
-    fc = requests.get(fc_url).json()
-    return fc
+    fc_2 = requests.get(fc_url).json()
+    return fc_2
 
-def process_weather(fc):
-    forecasts = []
+forecast_2 = fetch_weather(city)
 
-    for day_data in fc["forecast"]["forecastday"]:
-        date = day_data["date"]
-        forecast_day = day_data["day"]
+def process_data(fc_2):
+    forecasts_2 = []
 
-        temp = forecast_day["avgtemp_c"]
-        min_temp = forecast_day["mintemp_c"]
-        max_temp = forecast_day["maxtemp_c"]
-        humidity = forecast_day["avghumidity"]
-        wind = forecast_day["maxwind_kph"]
-        it_is_raining = int(forecast_day.get("daily_chance_of_rain", 0)) > 0
-        uv = forecast_day["uv"]
-        feels_like = temp  # Approximate
+    c_2 = fc_2["current"]
+    forecast_list_2 = fc_2["forecast"]["forecastday"]
 
-        warnings, advice = [], []
+    for day_data_2 in forecast_list_2:
+        date_2 = day_data_2["date"]
+        forecast_day_2 = day_data_2["day"]
 
-        if temp > 30:
-            warnings.append("Warning! Extremely hot.")
-            advice.append("Cover your head, drink plenty of water, and wear SPF.")
-        if it_is_raining:
-            warnings.append("Chance of rain.")
-            advice.append("Take an umbrella.")
-        if uv >= 8:
-            warnings.append("High UV expected.")
-            advice.append("Wear sunglasses and sunscreen.")
+        wind_2 = c_2["wind_kph"]
+        temp_2 = forecast_day_2["temp_c"]
+        min_temp_2 = forecast_day_2["mintemp_c"]
+        max_temp_2 = forecast_day_2["maxtemp_c"]
+        humidity_2 = c_2["humidity"]
+        it_is_raining_2 = forecast_2.get("daily_chance_of_rain", 0) > 0
+        feels_like_2 = forecast_day_2.get("feelslike_c", c["temp_c"])
+        feels_like_2 = temp_2  # Forecast doesn't provide feels_like, so we use avgtemp
+        uv_2 = c_2["uv"]
 
-        forecasts.append({
-            "date": date,
-            "avg_temp": temp,
-            "min_temp": min_temp,
-            "max_temp": max_temp,
-            "humidity": humidity,
-            "uv": uv,
-            "it_is_raining": it_is_raining,
-            "feels_like": feels_like,
-            "wind": wind,
-            "warnings": warnings,
-            "advice": advice
+        warnings_2, advice_2 = [], []
+
+        if temp_2 > 30:
+            warnings_2.append("Warning! Extremely hot.")
+            advice_2.append("Cover your head, drink plenty of water, and wear SPF.")
+        if it_is_raining_2:
+            warnings_2.append("Chance of rain.")
+            advice_2.append("Take an umbrella.")
+        if uv_2 >= 8:
+            warnings_2.append("High UV expected.")
+            advice_2.append("Wear sunglasses and sunscreen.")
+
+        forecasts_2.append({
+            "date": date_2,
+            "avg_temp": temp_2,
+            "min_temp": min_temp_2,
+            "max_temp": max_temp_2,
+            "humidity": humidity_2,
+            "uv": uv_2,
+            "it_is_raining": it_is_raining_2,
+            "feels_like": feels_like_2,
+            "wind": wind_2,
+            "warnings": warnings_2,
+            "advice": advice_2
         })
 
-    return forecasts
+    return forecasts_2
+    five_day_weather_2 = process_data(forecast_2)
 
-if __name__ == "__main__":
-    forecast = fetch_weather(city)
-    five_day_weather = process_weather(forecast)
-    for day_weather in five_day_weather:
+    if __name__ == "__main__":
         print(day_weather)
-
